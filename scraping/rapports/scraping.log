@@ -1,0 +1,75 @@
+2026-05-12 14:35:43,949 [INFO] === Début : hibou grand duc ===
+2026-05-12 14:35:56,886 [INFO] 105 URLs trouvées pour hibou grand duc
+2026-05-12 14:36:31,904 [ERROR] HTTP 403 : https://img.fotocommunity.com/hibou-grand-duc-93af4948-783a-49ab-99f9-
+2026-05-12 14:36:34,090 [ERROR] HTTP 404 : https://www.delcampe.net/static/img_large/auction/002/189/405/832_001.
+2026-05-12 14:37:55,299 [ERROR] HTTP 403 : https://www.les-oiseaux.com/Files/Image/hibou-grand-duc-main.jpg
+2026-05-12 14:38:57,927 [WARNING] Connexion échouée tentative 1/3 : https://infoanimales.net/wp-content/uploads/2021/03/buho-real-y-sus-ca
+2026-05-12 14:39:22,140 [WARNING] Timeout tentative 2/3 : https://infoanimales.net/wp-content/uploads/2021/03/buho-real-y-sus-ca
+2026-05-12 14:39:37,840 [WARNING] Timeout tentative 3/3 : https://infoanimales.net/wp-content/uploads/2021/03/buho-real-y-sus-ca
+2026-05-12 14:39:39,342 [ERROR] ECHEC après 3 tentatives : https://infoanimales.net/wp-content/uploads/2021/03/buho-real-y-sus-ca
+2026-05-12 14:39:51,829 [WARNING] Connexion échouée tentative 1/3 : https://queveutdire.com/wp-content/uploads/2025/02/Quest-ce-quun-hibou
+2026-05-12 14:40:23,061 [ERROR] HTTP 403 : https://static.actu.fr/uploads/2026/05/4addc3b1883865eddc3b1883832edcv
+2026-05-12 14:41:18,137 [ERROR] HTTP 403 : https://delta-dunarii.org/wp-content/uploads/2020/01/v-1536x1013.jpg
+2026-05-12 14:41:33,178 [WARNING] Timeout tentative 1/3 : https://ds.static.rtbf.be/article/image/1920x1080/c/1/9/b6f97e6f0fd175
+2026-05-12 14:41:58,074 [WARNING] Timeout tentative 2/3 : https://ds.static.rtbf.be/article/image/1920x1080/c/1/9/b6f97e6f0fd175
+2026-05-12 14:42:42,731 [ERROR] HTTP 400 : https://media.istockphoto.com/photos/eurasian-eagle-owl-picture-id6222
+2026-05-12 14:43:33,541 [ERROR] HTTP 403 : https://img.fotocommunity.com/hibou-grand-duc-deurope-7dd59ca5-104c-4f
+2026-05-12 14:43:44,996 [ERROR] HTTP 403 : https://www.les-oiseaux.com/Files/Image/hibou-grand-duc-juvenile-1080.
+2026-05-12 14:43:47,763 [ERROR] HTTP 403 : https://img.fotocommunity.com/hiboux-grand-duc-49806134-1569-466e-8a18
+2026-05-12 14:44:26,079 [WARNING] Trop petite : https://lookaside.fbsbx.com/lookaside/crawler/media/?media_id=10008447
+2026-05-12 14:44:29,359 [ERROR] HTTP 403 : https://www.mopnantes.fr/wp-content/uploads/2026/05/Apprendre-a-differ
+2026-05-12 14:45:50,956 [ERROR] HTTP 403 : https://upload.wikimedia.org/wikipedia/commons/c/ca/Bubo_bubo_1_(Marti
+2026-05-12 14:46:45,162 [ERROR] HTTP 403 : https://static.actu.fr/uploads/2026/05/4addc3b1883865eddc3b1883832edcv
+2026-05-12 14:47:15,211 [WARNING] Trop petite : https://lookaside.fbsbx.com/lookaside/crawler/media/?media_id=10000700
+2026-05-12 14:47:50,311 [ERROR] HTTP 403 : https://www.mopnantes.fr/wp-content/uploads/2026/05/Apprendre-a-differ
+2026-05-12 14:48:35,444 [WARNING] Timeout tentative 1/3 : https://www.grandsitesaintevictoire.com/wp-content/uploads/2024/03/Hib
+2026-05-12 14:48:48,942 [WARNING] Timeout tentative 2/3 : https://www.grandsitesaintevictoire.com/wp-content/uploads/2024/03/Hib
+2026-05-12 14:49:02,680 [WARNING] Timeout tentative 3/3 : https://www.grandsitesaintevictoire.com/wp-content/uploads/2024/03/Hib
+2026-05-12 14:49:04,182 [ERROR] ECHEC après 3 tentatives : https://www.grandsitesaintevictoire.com/wp-content/uploads/2024/03/Hib
+2026-05-12 14:49:11,248 [WARNING] Trop petite : https://lookaside.fbsbx.com/lookaside/crawler/media/?media_id=10000047
+2026-05-12 14:49:20,802 [INFO] === Fin : hibou grand duc → 87/100 images ===
+
+2026-05-12 14:49:20,802 [INFO] === Début : flamant rose ===
+2026-05-12 14:49:35,064 [INFO] 139 URLs trouvées pour flamant rose
+2026-05-12 14:49:54,058 [WARNING] Trop petite : https://media.adeo.com/mkp/eaf7576d71c58db6ae50d67a67bf1ce1/media.jpg?
+2026-05-12 14:50:09,643 [ERROR] HTTP 429 : https://static.blog4ever.com/2009/08/338544/photo_338544_6811880_20100
+2026-05-12 14:50:21,493 [WARNING] Trop petite : https://lookaside.fbsbx.com/lookaside/crawler/media/?media_id=12211255
+2026-05-12 14:50:27,819 [ERROR] HTTP 403 : https://s3.animalia.bio/animals/photos/full/1.25x1/flamingogreater-fla
+2026-05-12 14:50:42,759 [ERROR] HTTP 403 : https://www.challenges.fr/_ipx/f_jpg&enlarge_true&s_1200x630/cha/stati
+2026-05-12 14:52:40,142 [ERROR] HTTP 403 : https://babylab.ma/wp-content/uploads/2026/04/babylab-biomecanics-bioh
+2026-05-12 14:54:26,985 [ERROR] HTTP 403 : https://p4.wallpaperbetter.com/wallpaper/411/243/579/flamant-rose-wall
+2026-05-12 14:55:19,369 [ERROR] HTTP 400 : https://media.istockphoto.com/photos/pink-flamingo-bird-picture-id1136
+2026-05-12 14:55:26,126 [INFO] === Fin : flamant rose → 100/100 images ===
+
+2026-05-12 14:55:26,128 [INFO] === Début : martin pecheur ===
+2026-05-12 14:55:38,897 [INFO] 115 URLs trouvées pour martin pecheur
+2026-05-12 14:55:55,931 [ERROR] HTTP 410 : https://live.staticflickr.com/65535/52212671147_ce48d52623_b.jpg
+2026-05-12 14:57:34,338 [WARNING] Trop petite : https://lookaside.fbsbx.com/lookaside/crawler/media/?media_id=10233940
+2026-05-12 15:01:13,664 [INFO] === Fin : martin pecheur → 100/100 images ===
+
+2026-05-12 15:01:13,664 [INFO] === Début : cygne tubercule ===
+2026-05-12 15:01:26,417 [INFO] 70 URLs trouvées pour cygne tubercule
+2026-05-12 15:02:16,947 [ERROR] HTTP 403 : https://img.fotocommunity.com/cygne-tubercule-30b08271-b911-4a59-8c1f-
+2026-05-12 15:04:09,091 [ERROR] HTTP 403 : https://s3.animalia.bio/animals/photos/full/1.25x1/oCJAZuVVeTdtYtqGNjJ
+2026-05-12 15:04:59,016 [INFO] === Fin : cygne tubercule → 68/100 images ===
+
+2026-05-12 15:04:59,016 [INFO] === Début : pic vert ===
+2026-05-12 15:05:12,191 [INFO] 138 URLs trouvées pour pic vert
+2026-05-12 15:05:23,441 [ERROR] HTTP 403 : https://www.vivarmor.fr/wp-content/uploads/2021/12/pic-vert-1024x768.p
+2026-05-12 15:05:27,215 [ERROR] HTTP 400 : https://media.istockphoto.com/photos/european-green-woodpecker-picture
+2026-05-12 15:05:33,436 [ERROR] HTTP 403 : https://prigent-paysagiste.fr/wp-content/uploads/un-jardin-luxuriant-a
+2026-05-12 15:05:42,583 [WARNING] Trop petite : https://lookaside.fbsbx.com/lookaside/crawler/media/?media_id=14028631
+2026-05-12 15:06:35,580 [ERROR] HTTP 400 : https://media.istockphoto.com/photos/green-woodpecker-picture-id928962
+2026-05-12 15:06:45,000 [WARNING] Connexion échouée tentative 1/3 : http://www.visoflora.com/images/original/le-pic-vert-visoflora-80206.j
+2026-05-12 15:06:49,328 [WARNING] Connexion échouée tentative 2/3 : http://www.visoflora.com/images/original/le-pic-vert-visoflora-80206.j
+2026-05-12 15:06:54,597 [WARNING] Connexion échouée tentative 3/3 : http://www.visoflora.com/images/original/le-pic-vert-visoflora-80206.j
+2026-05-12 15:06:56,102 [ERROR] ECHEC après 3 tentatives : http://www.visoflora.com/images/original/le-pic-vert-visoflora-80206.j
+2026-05-12 15:07:06,380 [ERROR] HTTP 400 : https://media.istockphoto.com/photos/green-woodpecker-picture-id119249
+2026-05-12 15:07:11,385 [ERROR] HTTP 403 : https://img.fotocommunity.com/pic-vert-7247b988-d05c-48b7-901e-fcbe2fb
+2026-05-12 15:07:50,515 [ERROR] HTTP 429 : https://static.blog4ever.com/2011/10/539781/big_photo_539781_10737263_
+2026-05-12 15:08:14,177 [ERROR] HTTP 403 : https://s3.animalia.bio/animals/photos/small/1x1/2560px-groen-specht-i
+2026-05-12 15:08:30,520 [WARNING] Trop petite : https://lookaside.fbsbx.com/lookaside/crawler/media/?media_id=14028645
+2026-05-12 15:11:01,255 [WARNING] Trop petite : https://lookaside.fbsbx.com/lookaside/crawler/media/?media_id=61562263
+2026-05-12 15:11:30,533 [INFO] === Fin : pic vert → 100/100 images ===
+
+2026-05-12 15:11:33,005 [INFO] Scraping terminé
