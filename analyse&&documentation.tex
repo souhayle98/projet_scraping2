@@ -1,0 +1,509 @@
+\documentclass[12pt,a4paper]{article}
+
+% ── Encodage & langue ──────────────────────────────────────────────────────────
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[french]{babel}
+
+% ── Mise en page ───────────────────────────────────────────────────────────────
+\usepackage[top=2.5cm, bottom=2.5cm, left=2.5cm, right=2.5cm]{geometry}
+\usepackage{parskip}
+\setlength{\parindent}{0pt}
+
+% ── Typographie ────────────────────────────────────────────────────────────────
+\usepackage{lmodern}
+\usepackage{microtype}
+
+% ── Couleurs & graphiques ──────────────────────────────────────────────────────
+\usepackage[dvipsnames,table]{xcolor}
+\usepackage{tikz}
+\usetikzlibrary{patterns, calc}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+\usepackage{pgf-pie}
+
+% ── Tableaux ───────────────────────────────────────────────────────────────────
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{multirow}
+\usepackage{tabularx}
+
+% ── Listes & boîtes ────────────────────────────────────────────────────────────
+\usepackage{enumitem}
+\usepackage{tcolorbox}
+\tcbuselibrary{skins, breakable}
+
+% ── En-têtes & pieds de page ───────────────────────────────────────────────────
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small Projet 2}
+\fancyhead[R]{\small\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+
+% ── Liens & méta ───────────────────────────────────────────────────────────────
+\usepackage[hidelinks]{hyperref}
+\usepackage{caption}
+\usepackage{subcaption}
+
+% ── Palettes de couleurs personnalisées ────────────────────────────────────────
+\definecolor{primary}{HTML}{2C3E50}
+\definecolor{accent}{HTML}{2980B9}
+\definecolor{success}{HTML}{27AE60}
+\definecolor{warning}{HTML}{E67E22}
+\definecolor{danger}{HTML}{E74C3C}
+\definecolor{lightgray}{HTML}{ECF0F1}
+\definecolor{darkgray}{HTML}{7F8C8D}
+
+% ── Commandes utilitaires ─────────────────────────────────────────────────────
+\newcommand{\species}[1]{\textit{#1}}
+\newcommand{\code}[1]{\texttt{\small #1}}
+
+% ══════════════════════════════════════════════════════════════════════════════
+\begin{document}
+
+% ── Page de titre ─────────────────────────────────────────────────────────────
+\begin{titlepage}
+  \centering
+  \vspace*{2cm}
+
+  {\color{primary}\rule{\linewidth}{2pt}}\\[0.4cm]
+
+  {\Huge\bfseries\color{primary} Rapport d'Analyse du Dataset}\\[0.3cm]
+  {\Large\color{accent} Scraping des images d'Oiseaux e}\\[0.2cm]
+
+  {\color{primary}\rule{\linewidth}{2pt}}\\[1.5cm]
+
+  \begin{tcolorbox}[
+    colback=lightgray, colframe=accent, arc=6pt,
+    title={\bfseries Espèces étudiées}, fonttitle=\color{white},
+    coltitle=white, colbacktitle=accent
+  ]
+    \begin{center}
+      \begin{tabular}{ll}
+           & — Hibou grand-duc \\[2pt]
+          & — Flamant rose \\[2pt]
+        & — Martin-pêcheur \\[2pt]
+          & — Cygne tuberculé \\[2pt]
+           & — Pic vert \\
+      \end{tabular}
+    \end{center}
+  \end{tcolorbox}
+
+  \vfill
+
+  \begin{tabular}{rl}
+    \textbf{Module :}    & Application IA — Semestre 6 \\
+    \textbf{Projet :}    & Scrapind des images — Constitution d'un dataset d'images \\
+    \textbf{Date :}      & Mai 2026 \\
+  \end{tabular}
+
+  \vspace{1cm}
+  {\color{primary}\rule{\linewidth}{1pt}}
+\end{titlepage}
+
+% ── Table des matières ────────────────────────────────────────────────────────
+\tableofcontents
+\newpage
+
+% ══════════════════════════════════════════════════════════════════════════════
+\section{Vue d'ensemble du pipeline}
+
+Le dataset a été constitué en quatre étapes successives :
+
+\begin{enumerate}[label=\textbf{\arabic*.}]
+  \item \textbf{Scraping} : collecte automatique d'images via Bing Images (Selenium + Requests).
+  \item \textbf{Nettoyage} : suppression des images corrompues, trop petites, dupliquées ou filigranées.
+  \item \textbf{Prétraitement} : redimensionnement à $224\times224$ px, conversion en JPEG, normalisation $[0,1]$.
+  \item \textbf{Augmentation} : génération de $5$ variantes par image (rotation, symétrie, zoom, luminosité, contraste).
+\end{enumerate}
+
+% ══════════════════════════════════════════════════════════════════════════════
+\section{Statistiques de collecte (avant nettoyage)}
+
+\subsection{Nombre d'images collectées par espèce}
+
+\begin{table}[h!]
+  \centering
+  \caption{Résultats du scraping par espèce}
+  \label{tab:scraping}
+  \begin{tabular}{lcccc}
+    \toprule
+    \textbf{Espèce} & \textbf{URLs trouvées} & \textbf{Cible} & \textbf{Collectées} & \textbf{Taux} \\
+    \midrule
+    Hibou grand-duc  & 105 & 100 &  87 & 87\,\% \\
+    Flamant rose     & 139 & 100 & 100 & 100\,\% \\
+    Martin-pêcheur   & 115 & 100 & 100 & 100\,\% \\
+    Cygne tuberculé  &  70 & 100 &  68 & 68\,\% \\
+    Pic vert         & 138 & 100 & 100 & 100\,\% \\
+    \midrule
+    \textbf{Total}   & \textbf{567} & \textbf{500} & \textbf{455} & \textbf{91\,\%} \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\subsection{Visualisation — Images collectées par espèce}
+
+\begin{center}
+\begin{tikzpicture}
+  \begin{axis}[
+    ybar,
+    bar width=18pt,
+    width=13cm, height=7cm,
+    symbolic x coords={Hibou,Flamant,Martin-p.,Cygne,Pic vert},
+    xtick=data,
+    ymin=0, ymax=115,
+    ylabel={Nombre d'images},
+    xlabel={Espèce},
+    nodes near coords,
+    nodes near coords align={vertical},
+    every node near coord/.style={font=\small},
+    legend style={at={(0.98,0.98)}, anchor=north east},
+    grid=major, grid style={dashed, gray!30},
+    title={\textbf{Images collectées vs cible (100)}},
+  ]
+    \addplot[fill=accent!80, draw=accent] coordinates {
+      (Hibou,87) (Flamant,100) (Martin-p.,100) (Cygne,68) (Pic vert,100)
+    };
+    \addplot[fill=none, draw=danger, very thick, dashed] coordinates {
+      (Hibou,100) (Flamant,100) (Martin-p.,100) (Cygne,100) (Pic vert,100)
+    };
+    \legend{Collectées, Cible (100)}
+  \end{axis}
+\end{tikzpicture}
+\end{center}
+
+% ══════════════════════════════════════════════════════════════════════════════
+\section{Statistiques de nettoyage}
+
+\subsection{Tableau récapitulatif par espèce}
+
+\begin{table}[h!]
+  \centering
+  \caption{Résultats du nettoyage par espèce et par motif}
+  \label{tab:nettoyage}
+  \renewcommand{\arraystretch}{1.3}
+  \begin{tabularx}{\textwidth}{Xccccccc}
+    \toprule
+    \textbf{Espèce} & \textbf{Avant} & \textbf{Corrompues} & \textbf{Taille} & \textbf{Doublons} & \textbf{Filigranes} & \textbf{Total supprimé} & \textbf{Restantes} \\
+    \midrule
+    Hibou grand-duc  &  87 & 0 & 0 &  0 & 14 & 14 & 67\,(77\,\%) \\
+    Flamant rose     & 100 & 0 & 0 &  2 &  8 & 10 & 84\,(84\,\%) \\ % 100 → 92 → 84
+    Martin-pêcheur   & 100 & 0 & 0 &  0 &  5 &  5 & 93\,(93\,\%) \\
+    Cygne tuberculé  &  68 & 0 & 0 &  0 & 12 & 12 & 53\,(78\,\%) \\
+    Pic vert         & 100 & 0 & 0 &  1 & 20 & 21 & 78\,(78\,\%) \\
+    \midrule
+    \textbf{Total}   & \textbf{455} & 0 & 0 & \textbf{3} & \textbf{59} & \textbf{62} & \textbf{375} \\
+    \bottomrule
+  \end{tabularx}
+\end{table}
+
+\subsection{Répartition des suppressions par motif}
+
+\begin{center}
+\begin{tikzpicture}
+  \pie[
+    radius=3.5,
+    color={danger!80, warning!80, accent!80, success!80},
+    text=pin,
+    before number=\phantom{},
+    after number=\,\%,
+    /tikz/every pin/.style={font=\small},
+  ]{
+    0/Corrompues (0),
+    4.8/Taille insuffisante (3),
+    95.2/Filigranes (59),
+    0/Doublons (3)
+  }
+\end{tikzpicture}
+\end{center}
+
+\begin{tcolorbox}[colback=warning!10, colframe=warning, title=Observation]
+  Les filigranes constituent la cause principale de suppression (\textbf{95,2\,\%} des images éliminées).
+  Aucune image corrompue n'a été détectée, ce qui témoigne d'un téléchargement robuste.
+\end{tcolorbox}
+
+\subsection{Visualisation — Suppressions par espèce et motif}
+
+\begin{center}
+\begin{tikzpicture}
+  \begin{axis}[
+    ybar stacked,
+    bar width=18pt,
+    width=13cm, height=7.5cm,
+    symbolic x coords={Hibou,Flamant,Martin-p.,Cygne,Pic vert},
+    xtick=data,
+    ymin=0, ymax=35,
+    ylabel={Nombre d'images supprimées},
+    legend style={at={(0.5,-0.22)}, anchor=north, legend columns=3},
+    grid=major, grid style={dashed, gray!30},
+    title={\textbf{Détail des suppressions par espèce}},
+    nodes near coords,
+    nodes near coords align={vertical},
+    every node near coord/.style={font=\footnotesize},
+  ]
+    \addplot[fill=danger!70]   coordinates {(Hibou,0)(Flamant,0)(Martin-p.,0)(Cygne,0)(Pic vert,0)};
+    \addplot[fill=warning!80]  coordinates {(Hibou,0)(Flamant,0)(Martin-p.,0)(Cygne,0)(Pic vert,0)};
+    \addplot[fill=accent!70]   coordinates {(Hibou,0)(Flamant,2)(Martin-p.,0)(Cygne,0)(Pic vert,1)};
+    \addplot[fill=purple!60]   coordinates {(Hibou,14)(Flamant,8)(Martin-p.,5)(Cygne,12)(Pic vert,20)};
+    \legend{Corrompues, Taille, Doublons, Filigranes}
+  \end{axis}
+\end{tikzpicture}
+\end{center}
+
+% ══════════════════════════════════════════════════════════════════════════════
+\section{Prétraitement et augmentation}
+
+\subsection{Pipeline de prétraitement}
+
+Chaque image nettoyée est soumise au pipeline suivant :
+
+\begin{enumerate}[label=\textbf{\arabic*.}]
+  \item \textbf{Conversion RGB} : uniformisation des canaux (suppression des modes RGBA, L, P…).
+  \item \textbf{Redimensionnement} : $224 \times 224$ pixels (filtre \textsc{Lanczos}).
+  \item \textbf{Normalisation} : division par 255, valeurs dans $[0, 1]$.
+  \item \textbf{Sauvegarde JPEG} (qualité 95\,\%).
+\end{enumerate}
+
+\subsection{Stratégie d'augmentation}
+
+Cinq variantes sont générées par image originale, couvrant :
+
+\begin{itemize}
+  \item Rotation aléatoire dans $[-15°,\,+15°]$
+  \item Symétrie horizontale (probabilité 50\,\%)
+  \item Zoom centré aléatoire ($f \in [0.9, 1.1]$)
+  \item Ajustement de luminosité ($\times [0.8, 1.2]$)
+  \item Ajustement de contraste ($\times [0.8, 1.2]$)
+\end{itemize}
+
+\subsection{Nombre d'images après augmentation}
+
+\begin{table}[h!]
+  \centering
+  \caption{Images disponibles après prétraitement et augmentation}
+  \label{tab:augmentation}
+  \begin{tabular}{lcccc}
+    \toprule
+    \textbf{Espèce} & \textbf{Finales} & \textbf{Facteur} & \textbf{Après augmentation} \\
+    \midrule
+    Hibou grand-duc  &  67 & $\times 6$ &  402 \\
+    Flamant rose     &  84 & $\times 6$ &  504 \\
+    Martin-pêcheur   &  93 & $\times 6$ &  558 \\
+    Cygne tuberculé  &  53 & $\times 6$ &  318 \\
+    Pic vert         &  78 & $\times 6$ &  468 \\
+    \midrule
+    \textbf{Total}   & \textbf{375} & $\times 6$ & \textbf{2\,250} \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\subsection{Visualisation — Avant/après augmentation}
+
+\begin{center}
+\begin{tikzpicture}
+  \begin{axis}[
+    ybar,
+    bar width=14pt,
+    width=13cm, height=7cm,
+    symbolic x coords={Hibou,Flamant,Martin-p.,Cygne,Pic vert},
+    xtick=data,
+    ymin=0, ymax=620,
+    ylabel={Nombre d'images},
+    legend style={at={(0.98,0.98)}, anchor=north east},
+    grid=major, grid style={dashed, gray!30},
+    nodes near coords,
+    nodes near coords align={vertical},
+    every node near coord/.style={font=\footnotesize},
+    title={\textbf{Images finales vs images augmentées}},
+  ]
+    \addplot[fill=accent!80] coordinates {
+      (Hibou,67)(Flamant,84)(Martin-p.,93)(Cygne,53)(Pic vert,78)
+    };
+    \addplot[fill=success!70] coordinates {
+      (Hibou,402)(Flamant,504)(Martin-p.,558)(Cygne,318)(Pic vert,468)
+    };
+    \legend{Finales, Augmentées ($\times 6$)}
+  \end{axis}
+\end{tikzpicture}
+\end{center}
+
+% ══════════════════════════════════════════════════════════════════════════════
+\section{Répartition finale Train / Validation / Test}
+
+Une répartition classique $70\,\%$ / $15\,\%$ / $15\,\%$ est appliquée sur le jeu augmenté.
+
+\begin{table}[h!]
+  \centering
+  \caption{Répartition train/val/test par espèce}
+  \label{tab:split}
+  \begin{tabular}{lcccc}
+    \toprule
+    \textbf{Espèce} & \textbf{Total} & \textbf{Train (70\,\%)} & \textbf{Val (15\,\%)} & \textbf{Test (15\,\%)} \\
+    \midrule
+    Hibou grand-duc  &  402 &  281 &  60 &  61 \\
+    Flamant rose     &  504 &  353 &  75 &  76 \\
+    Martin-pêcheur   &  558 &  391 &  83 &  84 \\
+    Cygne tuberculé  &  318 &  223 &  47 &  48 \\
+    Pic vert         &  468 &  328 &  70 &  70 \\
+    \midrule
+    \textbf{Total}   & \textbf{2\,250} & \textbf{1\,576} & \textbf{335} & \textbf{339} \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\begin{center}
+\begin{tikzpicture}
+  \pie[
+    radius=3,
+    color={accent!80, success!70, warning!80},
+    text=pin,
+    after number=\,\%,
+  ]{70/Train (1\,576), 15/Validation (335), 15/Test (339)}
+\end{tikzpicture}
+\end{center}
+
+% ══════════════════════════════════════════════════════════════════════════════
+\section{Analyse critique des biais potentiels}
+
+\subsection{Origine géographique des images}
+
+Les images ont été collectées via \textbf{Bing Images} sans restriction géographique explicite. Cependant, plusieurs biais sont probables :
+
+\begin{itemize}
+  \item Les résultats Bing sont influencés par la langue de la requête (requêtes en \textbf{français}).
+    Les images proviennent donc majoritairement de sites européens francophones (France, Belgique, Suisse).
+  \item Le Hibou grand-duc et le Martin-pêcheur étant des espèces emblématiques en Europe de l'Ouest,
+    leurs représentations reflètent principalement cet habitat.
+  \item Le Flamant rose (présent aussi en Afrique et en Asie) pourrait être sous-représenté
+    dans des contextes géographiques hors d'Europe.
+\end{itemize}
+
+\begin{tcolorbox}[colback=danger!5, colframe=danger, title=Risque identifié]
+  Un modèle entraîné sur ce dataset pourrait être moins performant sur des spécimens
+  photographiés hors d'Europe (sous-espèces, colorations différentes, arrière-plans exotiques).
+\end{tcolorbox}
+
+\subsection{Diversité des conditions de prise de vue}
+
+La diversité des images Bing est \textit{a priori} plus élevée que celle d'un dataset photographié
+par une seule équipe, mais certains angles morts restent probables :
+
+\begin{itemize}
+  \item \textbf{Saisons} : les oiseaux photographiés en plumage nuptial sont surreprésentés
+    (plus esthétiques, donc plus partagés en ligne).
+  \item \textbf{Angles} : les poses de profil ou de 3/4 dominent ; les vues en plein vol ou
+    vues du dessus sont plus rares.
+  \item \textbf{Arrière-plans} : les fonds naturels dominent, mais les images de volières ou
+    de zoos peuvent introduire du bruit.
+  \item \textbf{Éclairages} : les conditions de faible luminosité (crépuscule, nuit)
+    sont quasi absentes pour les espèces diurnes.
+\end{itemize}
+
+\subsection{Disponibilité relative des espèces}
+
+\begin{table}[h!]
+  \centering
+  \caption{Facilité de collecte comparée par espèce}
+  \renewcommand{\arraystretch}{1.3}
+  \begin{tabular}{lcp{7cm}}
+    \toprule
+    \textbf{Espèce} & \textbf{URLs / Collectées} & \textbf{Commentaire} \\
+    \midrule
+    Flamant rose    & 139 / 100 & Très iconique, abondant en ligne \\
+    Pic vert        & 138 / 100 & Commun, nombreux sites naturalistes \\
+    Martin-pêcheur  & 115 / 100 & Populaire en photographie animalière \\
+    Hibou grand-duc & 105 / 87  & Espèce nocturne, photos rares \\
+    Cygne tuberculé &  70 / 68  & Moins recherché ; beaucoup de filigranes \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\subsection{Biais de confirmation}
+
+Le scraping par mot-clé produit un \textbf{biais de saillance} : les images les mieux classées
+sont les plus représentatives (bec visible, couleurs vives, fond épuré). Les individus juvéniles,
+en mue, ou partiellement cachés par la végétation sont systématiquement sous-représentés.
+
+Ce phénomène est amplifié par :
+\begin{itemize}
+  \item la popularité des photos de parc/zoo sur les réseaux sociaux ;
+  \item l'algorithme de Bing qui favorise les images les plus cliquées.
+\end{itemize}
+
+% ══════════════════════════════════════════════════════════════════════════════
+\section{Respect des droits et aspects légaux}
+
+\subsection{Sources des images}
+
+Les images ont été téléchargées depuis des URLs publiquement indexées par Bing, incluant
+(liste non exhaustive d'après les logs) :
+
+\begin{itemize}
+  \item \texttt{wikimedia.org} — licences Creative Commons (CC-BY, CC-BY-SA)
+  \item \texttt{flickr.com} — droits variables (All Rights Reserved à CC0)
+  \item \texttt{fotocommunity.com} — droits réservés (403 majoritairement rejetés)
+  \item \texttt{istockphoto.com} — images sous licence commerciale (rejetées : HTTP 400/403)
+  \item \texttt{animalia.bio}, \texttt{les-oiseaux.com} — droits réservés (rejetées)
+  \item \texttt{facebook} (\texttt{fbsbx.com}) — droits réservés
+  \item Sites de presse (\texttt{actu.fr}, \texttt{rtbf.be}) — droits réservés
+\end{itemize}
+
+\subsection{Cadre légal applicable}
+
+\begin{tcolorbox}[colback=lightgray, colframe=primary, title=\textbf{Avertissement}]
+Ce dataset est utilisé uniquement dans un cadre académique et pédagogique.  
+Les images collectées restent la propriété de leurs auteurs respectifs.
+\end{tcolorbox}
+
+Quelques points légaux importants :
+
+\begin{enumerate}[label=\textbf{\arabic*.}]
+    \item \textbf{Droits d’auteur} : toute image publiée sur Internet est protégée automatiquement par le droit d’auteur.
+
+    \item \textbf{Usage académique} : les images sont utilisées uniquement pour l’apprentissage, la recherche et l’expérimentation non commerciale.
+
+    \item \textbf{Moteurs de recherche} : les résultats affichés par Bing ou Google ne donnent pas le droit de réutiliser librement les images.
+
+    \item \textbf{Scraping} : la collecte automatique doit respecter les conditions d’utilisation et les règles des sites web concernés.
+
+    \item \textbf{Protection des données} : le dataset ne contient pas volontairement d’informations personnelles sensibles.
+\end{enumerate}
+══════════════════════════════════════════════════════════════════════════════
+\section{Synthèse}
+
+\begin{table}[h!]
+  \centering
+  \caption{Tableau de synthèse global du pipeline}
+  \renewcommand{\arraystretch}{1.4}
+  \begin{tabular}{lc}
+    \toprule
+    \textbf{Étape} & \textbf{Nombre d'images} \\
+    \midrule
+    Collectées (scraping)              &  455 \\
+    Supprimées (nettoyage)             &   62 \quad (13,6\,\%) \\
+    \quad dont filigranes              &   59 \\
+    \quad dont doublons                &    3 \\
+    Après nettoyage                    &  375 \\
+    Après prétraitement (finales)      &  375 \\
+    Après augmentation ($\times 6$)    & 2\,250 \\
+    \midrule
+    \textbf{Jeu d'entraînement (70\,\%)} & \textbf{1\,576} \\
+    \textbf{Jeu de validation (15\,\%)}  & \textbf{335} \\
+    \textbf{Jeu de test (15\,\%)}        & \textbf{339} \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\vspace{1cm}
+
+\begin{tcolorbox}[colback=success!10, colframe=success, title=\textbf{Conclusion}]
+  Le dataset final contient \textbf{2\,250 images} réparties équitablement entre 5 espèces
+  et 3 sous-ensembles. Le pipeline automatisé (scraping $\to$ nettoyage $\to$ prétraitement
+  $\to$ augmentation) est reproductible et documenté. Les principaux biais identifiés
+  (surreprésentation de l'Europe de l'Ouest, poses saillantes, plumage nuptial) devront
+  être corrigés lors d'une éventuelle mise en production par l'intégration de sources
+  ouvertes et diversifiées géographiquement.
+\end{tcolorbox}
+
+\end{document}
