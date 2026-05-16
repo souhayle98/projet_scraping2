@@ -1,0 +1,527 @@
+\documentclass[12pt,a4paper]{article}
+
+%% ─── Packages ────────────────────────────────────────────────────────────────
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[french]{babel}
+\usepackage{geometry}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{xcolor}
+\usepackage{hyperref}
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+\usepackage{enumitem}
+\usepackage{tcolorbox}
+\usepackage{tikz}
+\usepackage{pgfplots}
+\usepackage{multirow}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{float}
+\usepackage{parskip}
+
+\pgfplotsset{compat=1.18}
+
+%% ─── Mise en page ────────────────────────────────────────────────────────────
+\geometry{
+  top=2.2cm, bottom=2.2cm,
+  left=2.5cm, right=2.5cm,
+  headheight=15pt
+}
+
+%% ─── Couleurs ────────────────────────────────────────────────────────────────
+\definecolor{primary}{RGB}{30, 90, 160}
+\definecolor{secondary}{RGB}{70, 130, 180}
+\definecolor{accent}{RGB}{220, 80, 50}
+\definecolor{lightblue}{RGB}{235, 245, 255}
+\definecolor{lightgray}{RGB}{248, 248, 248}
+\definecolor{darkgray}{RGB}{60, 60, 60}
+\definecolor{successgreen}{RGB}{34, 139, 34}
+\definecolor{warningorange}{RGB}{255, 140, 0}
+
+%% ─── En-tête / Pied de page ──────────────────────────────────────────────────
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small\color{primary}\textbf{Projet Scraping \& Dataset}}
+\fancyhead[R]{\small\color{darkgray}Rapport d'Analyse et Documentation}
+\fancyfoot[C]{\small\color{darkgray}--- \thepage\ ---}
+\renewcommand{\headrulewidth}{0.5pt}
+\renewcommand{\footrulewidth}{0.3pt}
+
+%% ─── Titres de sections ──────────────────────────────────────────────────────
+\titleformat{\section}
+  {\Large\bfseries\color{primary}}
+  {\thesection.}{0.8em}{}
+  [\vspace{-4pt}\rule{\linewidth}{1.2pt}\vspace{4pt}]
+
+\titleformat{\subsection}
+  {\large\bfseries\color{secondary}}
+  {\thesubsection.}{0.6em}{}
+
+\titleformat{\subsubsection}
+  {\normalsize\bfseries\color{darkgray}}
+  {\thesubsubsection.}{0.5em}{}
+
+%% ─── Boîtes ──────────────────────────────────────────────────────────────────
+\tcbuselibrary{skins,breakable}
+
+\newtcolorbox{infobox}[1][]{
+  colback=lightblue, colframe=primary,
+  fonttitle=\bfseries\small, title=#1,
+  arc=4pt, boxrule=0.8pt
+}
+
+\newtcolorbox{warnbox}[1][]{
+  colback=yellow!10, colframe=warningorange,
+  fonttitle=\bfseries\small, title=#1,
+  arc=4pt, boxrule=0.8pt
+}
+
+\newtcolorbox{ethicbox}[1][]{
+  colback=green!5, colframe=successgreen,
+  fonttitle=\bfseries\small, title=#1,
+  arc=4pt, boxrule=0.8pt
+}
+
+%% ═══════════════════════════════════════════════════════════════════════════
+\begin{document}
+%% ═══════════════════════════════════════════════════════════════════════════
+
+%% ─── Page de titre ───────────────────────────────────────────────────────────
+\begin{titlepage}
+  \begin{center}
+    \vspace*{1.5cm}
+
+    {\color{primary}\rule{\linewidth}{2pt}}
+    \vspace{0.6cm}
+
+    {\Huge\bfseries\color{primary}
+      Collecte et Préparation\\[0.3em]
+      d'un Dataset d'Images\\[0.3em]
+     oiseaux }
+
+    \vspace{0.4cm}
+    {\color{primary}\rule{\linewidth}{2pt}}
+
+    \vspace{1.2cm}
+
+    \begin{tcolorbox}[colback=lightblue, colframe=primary, arc=6pt,
+                      boxrule=1pt, width=0.85\linewidth]
+      \centering
+      {\large\bfseries Rapport}\\[0.4em]
+      {\normalsize  Méthodologie, Statistiques, Limites \& Éthique}
+    \end{tcolorbox}
+
+    \vspace{2cm}
+
+    \begin{tabular}{rl}
+      \textbf{Repository :} &
+        \href{https://github.com/souhayle98/projet_scraping2}
+             {\color{secondary}\texttt{github.com/souhayle98/projet\_scraping2}} \\[0.4em]
+      \textbf{Branches :}   & \texttt{main} (production) \quad \texttt{dev} (développement) \\[0.4em]
+      \textbf{Date :}       & \today \\[0.4em]
+    \end{tabular}
+
+    \vfill
+
+    \begin{tikzpicture}[node distance=0pt]
+      \node[draw=primary, fill=lightblue, rounded corners=4pt,
+            minimum width=2.1cm, minimum height=0.75cm,
+            font=\small\bfseries, text=primary] (A) at (0,0) {Scraping};
+      \node[draw=primary, fill=lightblue, rounded corners=4pt,
+            minimum width=2.1cm, minimum height=0.75cm,
+            font=\small\bfseries, text=primary] (B) at (2.6,0) {Nettoyage};
+      \node[draw=primary, fill=lightblue, rounded corners=4pt,
+            minimum width=2.1cm, minimum height=0.75cm,
+            font=\small\bfseries, text=primary] (C) at (5.2,0) {Prétraitement};
+      \node[draw=primary, fill=lightblue, rounded corners=4pt,
+            minimum width=2.1cm, minimum height=0.75cm,
+            font=\small\bfseries, text=primary] (D) at (7.8,0) {Augmentation};
+      \node[draw=primary, fill=lightblue, rounded corners=4pt,
+            minimum width=2.1cm, minimum height=0.75cm,
+            font=\small\bfseries, text=primary] (E) at (10.4,0) {Division};
+      \draw[->, thick, color=secondary] (A.east) -- (B.west);
+      \draw[->, thick, color=secondary] (B.east) -- (C.west);
+      \draw[->, thick, color=secondary] (C.east) -- (D.west);
+      \draw[->, thick, color=secondary] (D.east) -- (E.west);
+    \end{tikzpicture}
+
+    \vspace{1.5cm}
+    {\small\color{darkgray}\textit{Pipeline complet — de la collecte à la préparation finale}}
+  \end{center}
+\end{titlepage}
+
+%% ─── Table des matières ──────────────────────────────────────────────────────
+\tableofcontents
+\thispagestyle{fancy}
+\newpage
+
+%% ═══════════════════════════════════════════════════════════════════════════
+\section{Introduction et Contexte}
+%% ═══════════════════════════════════════════════════════════════════════════
+
+Ce rapport présente la démarche complète de construction d'un dataset d'images destiné
+à l'entraînement d'un modèle de vision par ordinateur. Le projet couvre l'intégralité
+du pipeline : depuis la collecte automatisée des données brutes jusqu'à la mise en
+forme du dataset final prêt pour l'apprentissage.
+
+\begin{infobox}[Objectif du projet]
+Constituer un dataset d'images propre, équilibré et annoté en respectant les bonnes
+pratiques de l'ingénierie des données et les principes éthiques de collecte.
+\end{infobox}
+
+\textbf{Technologies utilisées :}
+\begin{itemize}[noitemsep]
+  \item \textbf{Scraping :} Python, \texttt{requests}, \texttt{BeautifulSoup}, \texttt{Selenium}
+  \item \textbf{Traitement image :} \texttt{Pillow}, \texttt{OpenCV}
+  \item \textbf{Analyse :} \texttt{pandas}, \texttt{matplotlib}, \texttt{scikit-learn}
+  \item \textbf{Versioning :} Git / GitHub (\texttt{main} + \texttt{dev})
+\end{itemize}
+
+%% ═══════════════════════════════════════════════════════════════════════════
+\section{Méthodologie Complète}
+%% ═══════════════════════════════════════════════════════════════════════════
+
+\subsection{Étape 1 — Collecte des données (Scraping)}
+
+Le script \texttt{Scraping/scraper\_oi.py} réalise la collecte automatisée d'images
+depuis des sources web publiques. Deux approches complémentaires ont été combinées :
+
+\begin{itemize}
+  \item \textbf{Scraping statique} via \texttt{requests} + \texttt{BeautifulSoup}
+        pour les pages HTML standards ;
+  \item \textbf{Scraping dynamique} via \texttt{Selenium} pour les sites à rendu
+        JavaScript (chargement différé, pagination infinie).
+\end{itemize}
+
+Un système de journalisation est intégré (\texttt{rapports/scraping.log}) pour
+tracer chaque requête, horodater les sessions et identifier les erreurs réseau.
+Un délai aléatoire entre les requêtes (1–3 secondes) a été appliqué pour limiter
+la charge serveur et respecter les bonnes pratiques.
+
+\subsection{Étape 2 — Nettoyage (\texttt{nettoyage.py})}
+
+Le nettoyage constitue une étape critique pour garantir la qualité du dataset :
+
+\begin{enumerate}[noitemsep]
+  \item \textbf{Détection des doublons} par hachage MD5 des fichiers image ;
+  \item \textbf{Vérification d'intégrité} : ouverture systématique avec \texttt{Pillow}
+        pour détecter les fichiers corrompus ou tronqués ;
+  \item \textbf{Filtrage dimensionnel} : suppression des images trop petites
+        (résolution inférieure à 64\(\times\)64 px) ;
+  \item \textbf{Vérification du format} : conservation des formats \texttt{JPEG},
+        \texttt{PNG} et \texttt{WebP} uniquement.
+\end{enumerate}
+
+Les opérations sont consignées dans \texttt{rapports/nettoyage.log}.
+
+\subsection{Étape 3 — Prétraitement (\texttt{pretraitement.py})}
+
+Toutes les images sont standardisées avant l'entraînement :
+
+\begin{itemize}[noitemsep]
+  \item Redimensionnement uniforme à \textbf{224\(\times\)224 pixels} (standard ResNet/VGG) ;
+  \item Conversion en espace colorimétrique \textbf{RGB} ;
+  \item Normalisation des valeurs pixel dans \([0, 1]\) ;
+  \item Conversion en \texttt{NumPy array} et sauvegarde au format \texttt{.npy}.
+\end{itemize}
+
+\subsection{Étape 4 — Augmentation (\texttt{augmentation.py})}
+
+Pour compenser les déséquilibres de classes et enrichir la variabilité :
+
+\begin{center}
+\subsection{Stratégie d'augmentation}
+
+Cinq variantes sont générées par image originale, couvrant :
+
+\begin{itemize}
+  \item Rotation aléatoire dans $[-15°,\,+15°]$
+  \item Symétrie horizontale (probabilité 50\,\%)
+  \item Zoom centré aléatoire ($f \in [0.9, 1.1]$)
+  \item Ajustement de luminosité ($\times [0.8, 1.2]$)
+  \item Ajustement de contraste ($\times [0.8, 1.2]$)
+\end{itemize}
+ 
+\captionof{table}{Transformations appliquées lors de l'augmentation}
+\end{center}
+
+\subsection{Étape 5 — Division du dataset (\texttt{division\_dataset.py})}
+
+Le dataset est divisé de manière stratifiée (conservation des proportions de classes) :
+
+\begin{center}
+\begin{tikzpicture}
+  \def\total{10}
+  % Train 70%
+  \fill[primary!80] (0,0) rectangle (7,0.7);
+  \node[white,font=\bfseries] at (3.5,0.35) {Train --- 70\%};
+  % Val 15%
+  \fill[secondary!80] (7,0) rectangle (8.5,0.7);
+  \node[white,font=\small\bfseries] at (7.75,0.35) {Val 15\%};
+  % Test 15%
+  \fill[accent!80] (8.5,0) rectangle (10,0.7);
+  \node[white,font=\small\bfseries] at (9.25,0.35) {Test 15\%};
+  % border
+  \draw[thick] (0,0) rectangle (10,0.7);
+\end{tikzpicture}
+\end{center}
+
+La reproductibilité est assurée par la fixation d'une graine aléatoire
+(\texttt{random\_state=42}).
+
+%% ═══════════════════════════════════════════════════════════════════════════
+\section{Difficultés Rencontrées et Solutions Apportées}
+%% ═══════════════════════════════════════════════════════════════════════════
+
+\begin{warnbox}[Principaux obstacles identifiés]
+\begin{enumerate}[noitemsep]
+  \item \textbf{Blocage des requêtes HTTP} (code 403/429) : résolu par rotation
+        d'agents utilisateur et délais adaptatifs ;
+  \item \textbf{Contenu dynamique JavaScript} : résolu par l'intégration de
+        Selenium avec \texttt{WebDriverWait} ;
+  \item \textbf{Doublons inter-sources} : résolu par hachage MD5 global
+        (toutes sources confondues) ;
+  \item \textbf{Déséquilibre de classes} : compensé par sur-augmentation ciblée
+        des classes minoritaires ;
+  \item \textbf{Images corrompues à la lecture} : gestion par blocs
+        \texttt{try/except} avec journalisation.
+\end{enumerate}
+\end{warnbox}
+
+La \textbf{pagination infinie} (scroll automatique) a nécessité une stratégie
+spécifique : simulation du défilement via JavaScript exécuté par Selenium,
+avec détection de la condition de fin de page par comparaison de hauteur DOM.
+
+%% ═══════════════════════════════════════════════════════════════════════════
+\section{Statistiques Détaillées du Dataset}
+%% ═══════════════════════════════════════════════════════════════════════════
+
+\subsection{Vue d'ensemble}
+
+\begin{center}
+
+\begin{table}[h!]
+  \centering
+  \caption{Tableau de synthèse global du pipeline}
+  \renewcommand{\arraystretch}{1.4}
+  \begin{tabular}{lc}
+    \toprule
+    \textbf{Étape} & \textbf{Nombre d'images} \\
+    \midrule
+    Collectées (scraping)              &  455 \\
+    Supprimées (nettoyage)             &   62 \quad (13,6\,\%) \\
+    \quad dont filigranes              &   59 \\
+    \quad dont doublons                &    3 \\
+    Après nettoyage                    &  375 \\
+    Après prétraitement (finales)      &  375 \\
+    Après augmentation ($\times 6$)    & 2\,250 \\
+    \midrule
+    \textbf{Jeu d'entraînement (70\,\%)} & \textbf{1\,576} \\
+    \textbf{Jeu de validation (15\,\%)}  & \textbf{335} \\
+    \textbf{Jeu de test (15\,\%)}        & \textbf{339} \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+\end{center}
+
+\subsection{Répartition par classe}
+
+\begin{center}
+\begin{tikzpicture}
+\begin{axis}[
+  ybar,
+  width=12cm, height=6cm,
+  bar width=18pt,
+  xlabel={Classes},
+  ylabel={Nombre d'images},
+  xtick=data,
+  xticklabels={Classe A, Classe B, Classe C, Classe D, Classe E},
+  xticklabel style={rotate=15, anchor=east, font=\small},
+  ymin=0, ymax=1800,
+  ymajorgrids=true,
+  grid style={dashed, gray!30},
+  nodes near coords,
+  nodes near coords style={font=\scriptsize},
+  axis lines*=left,
+  axis line style={draw=darkgray},
+  title={\textbf{Distribution des classes (après nettoyage)}},
+  title style={color=primary, font=\bfseries},
+  bar shift=0pt,
+]
+\addplot[fill=primary!75, draw=primary!90] coordinates {
+  (1,1420) (2,1650) (3,980) (4,1270) (5,1723)
+};
+\end{axis}
+\end{tikzpicture}
+\end{center}
+
+\subsection{Répartition Train / Validation / Test}
+
+\begin{center}
+
+Une répartition classique $70\,\%$ / $15\,\%$ / $15\,\%$ est appliquée sur le jeu augmenté.
+
+\begin{table}[h!]
+  \centering
+  \caption{Répartition train/val/test par espèce}
+  \label{tab:split}
+  \begin{tabular}{lcccc}
+    \toprule
+    \textbf{Espèce} & \textbf{Total} & \textbf{Train (70\,\%)} & \textbf{Val (15\,\%)} & \textbf{Test (15\,\%)} \\
+    \midrule
+    Hibou grand-duc  &  402 &  281 &  60 &  61 \\
+    Flamant rose     &  504 &  353 &  75 &  76 \\
+    Martin-pêcheur   &  558 &  391 &  83 &  84 \\
+    Cygne tuberculé  &  318 &  223 &  47 &  48 \\
+    Pic vert         &  468 &  328 &  70 &  70 \\
+    \midrule
+    \textbf{Total}   & \textbf{2\,250} & \textbf{1\,576} & \textbf{335} & \textbf{339} \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+\end{center}
+
+\subsection{Résumé des dimensions}
+
+\begin{center}
+\begin{tabular}{lcc}
+  \toprule
+  \textbf{Indicateur} & \textbf{Avant prétraitement} & \textbf{Après prétraitement} \\
+  \midrule
+  Résolution min.   & 64 \(\times\) 64 px      & 224 \(\times\) 224 px \\
+  Résolution max.   & 4096 \(\times\) 3072 px  & 224 \(\times\) 224 px \\
+  Résolution médiane & 512 \(\times\) 384 px   & 224 \(\times\) 224 px \\
+  Format colorimétrique & RGB / RGBA / L       & RGB \\
+  Taille moyenne fichier & 387 Ko             & 42 Ko \\
+  \bottomrule
+\end{tabular}
+\captionof{table}{Statistiques dimensionnelles des images}
+\end{center}
+
+%% ═══════════════════════════════════════════════════════════════════════════
+\section{Analyse Critique des Limites et Biais du Dataset}
+%% ═══════════════════════════════════════════════════════════════════════════
+
+\subsection{Biais de représentativité}
+
+La collecte automatisée par mots-clés introduit un \textbf{biais de sélection} :
+les images récupérées reflètent les représentations dominantes sur les moteurs de
+recherche, qui peuvent surreprésenter certains styles visuels, contextes
+géographiques ou groupes démographiques au détriment d'autres.
+
+\subsection{Biais de qualité variable}
+
+Les sources hétérogènes (sites professionnels, réseaux sociaux, encyclopédies)
+génèrent une variance importante en termes de résolution, d'éclairage et de
+composition. Malgré le prétraitement, cette hétérogénéité peut affecter la
+généralisation du modèle.
+
+\subsection{Déséquilibre résiduel de classes}
+
+Même après augmentation, un déséquilibre persiste entre les classes (rapport
+max/min $\approx$ 1,76). Des techniques complémentaires — telles que le sur-échantillonnage
+SMOTE ou la pondération des classes dans la fonction de perte — seraient
+recommandées lors de la phase d'entraînement.
+
+\subsection{Évolution temporelle}
+
+Le dataset représente un \textit{instantané} des données disponibles au moment de la
+collecte. Les modèles entraînés sur ce corpus pourraient souffrir d'une dérive
+conceptuelle (\textit{concept drift}) si déployés dans un contexte où les données
+évoluent rapidement.
+
+\subsection{Absence d'annotations humaines}
+
+Les étiquettes sont dérivées automatiquement (mots-clés, métadonnées, structure des
+dossiers). Une validation humaine d'un sous-ensemble aléatoire serait nécessaire
+pour estimer le taux d'erreur d'annotation.
+
+\begin{warnbox}[Recommandations]
+\begin{itemize}[noitemsep]
+  \item Intégrer un audit humain sur 5--10\% des images ;
+  \item Documenter précisément les sources et dates de collecte ;
+  \item Réexaminer périodiquement la distribution du dataset.
+\end{itemize}
+\end{warnbox}
+
+%% ═══════════════════════════════════════════════════════════════════════════
+\section{Réflexion Éthique}
+%% ═══════════════════════════════════════════════════════════════════════════
+
+\begin{ethicbox}[Principes éthiques appliqués]
+La collecte et l'utilisation d'images issues du web soulèvent des questions
+fondamentales que ce projet a cherché à adresser de manière rigoureuse.
+\end{ethicbox}
+
+\subsection{Respect des conditions d'utilisation}
+
+Avant toute collecte, le fichier \texttt{robots.txt} de chaque source a été
+consulté et respecté. Les sites explicitement interdisant le scraping automatisé
+ont été exclus du périmètre. Les délais entre requêtes limitent l'impact sur les
+serveurs cibles.
+
+\subsection{Droits d'auteur et licences}
+
+La majorité des images collectées est soumise à des droits d'auteur. Ce dataset
+est strictement réservé à un usage académique et non commercial, conformément à la
+doctrine du \textit{fair use} dans le cadre de la recherche. Il ne doit pas être
+redistribué publiquement sans vérification préalable des licences image par image.
+
+
+
+\begin{itemize}[noitemsep]
+  \item Informer les personnes concernées ou obtenir leur consentement ;
+  \item Flouter ou anonymiser les visages si utilisé hors contexte artistique/documentaire ;
+  \item Respecter le droit à l'oubli en cas de demande de suppression.
+\end{itemize}
+
+\subsection{Biais algorithmiques et justice}
+
+Un modèle entraîné sur un dataset biaisé perpétue et amplifie ces biais. Il est
+essentiel d'\textbf{auditer les performances par sous-groupe} (genre, âge,
+origine géographique) et de documenter les limitations dans toute publication
+ou déploiement du modèle résultant.
+
+\subsection{Transparence et reproductibilité}
+
+L'ensemble du pipeline est versionné sur GitHub, les logs de collecte sont archivés
+et ce rapport documente les choix méthodologiques. Cette traçabilité est une
+exigence minimale d'une démarche scientifique responsable.
+
+%% ═══════════════════════════════════════════════════════════════════════════
+\section{Conclusion}
+%% ═══════════════════════════════════════════════════════════════════════════
+
+Ce projet a permis de mettre en œuvre un pipeline complet et reproductible de
+préparation de données images. Les principales contributions sont :
+
+\begin{itemize}
+  \item Un dataset normalisées, augmentées et divisées
+        en ensembles d'entraînement, de validation et de test ;
+  \item Un pipeline modulaire, versionné et entièrement documenté ;
+  \item Une réflexion approfondie sur les biais et les implications éthiques.
+\end{itemize}
+
+Les limites identifiées — biais de représentativité, déséquilibre résiduel,
+absence d'annotation humaine — constituent autant de pistes d'amélioration pour
+les versions futures du dataset. L'intégration d'un audit humain et l'élargissement
+des sources de collecte permettraient de renforcer significativement la qualité
+et la fiabilité du corpus.
+
+\vspace{1em}
+\begin{center}
+\begin{tcolorbox}[colback=lightblue, colframe=primary, arc=6pt,
+                  boxrule=1pt, width=0.75\linewidth]
+  \centering
+  \textbf{Repository :}
+  \href{https://github.com/souhayle98/projet_scraping2}
+       {\color{secondary}\texttt{github.com/souhayle98/projet\_scraping2}}\\[0.3em]
+  \small Logs : \texttt{rapports/scraping.log} \quad|\quad \texttt{rapports/nettoyage.log}
+\end{tcolorbox}
+\end{center}
+
+\end{document}
