@@ -1,0 +1,439 @@
+\documentclass[12pt,a4paper]{article}
+
+%% ─── Packages essentiels ─────────────────────────────────────────────────────
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[french]{babel}
+\usepackage{geometry}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{xcolor}
+\usepackage{hyperref}
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+\usepackage{enumitem}
+\usepackage{tcolorbox}
+\usepackage{tikz}
+\usepackage{pgfplots}
+\usepackage{pgf-pie}
+\usepackage{multirow}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{float}
+\usepackage{parskip}
+\usepackage{charter}      % police élégante mais lisible
+
+\pgfplotsset{compat=1.18}
+
+%% ─── Mise en page ────────────────────────────────────────────────────────────
+\geometry{
+  top=2.2cm, bottom=2.2cm,
+  left=2.5cm, right=2.5cm,
+  headheight=15pt
+}
+
+%% ─── Couleurs personnalisées (harmonie cohérente) ───────────────────────────
+\definecolor{primary}{RGB}{30, 90, 160}
+\definecolor{secondary}{RGB}{70, 130, 180}
+\definecolor{accent}{RGB}{220, 80, 50}
+\definecolor{success}{RGB}{34, 139, 34}
+\definecolor{warning}{RGB}{255, 140, 0}
+\definecolor{lightblue}{RGB}{235, 245, 255}
+\definecolor{lightgray}{RGB}{248, 248, 248}
+\definecolor{darkgray}{RGB}{60, 60, 60}
+
+%% ─── En-tête / Pied de page ──────────────────────────────────────────────────
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small\color{primary}\textbf{Projet Scraping \& Dataset}}
+\fancyhead[R]{\small\color{darkgray}Rapport final — Tous livrables inclus}
+\fancyfoot[C]{\small\color{darkgray}--- \thepage\ ---}
+\renewcommand{\headrulewidth}{0.5pt}
+\renewcommand{\footrulewidth}{0.3pt}
+
+%% ─── Titres de sections ──────────────────────────────────────────────────────
+\titleformat{\section}
+  {\Large\bfseries\color{primary}}
+  {\thesection.}{0.8em}{}
+  [\vspace{-4pt}\rule{\linewidth}{1.2pt}\vspace{6pt}]
+
+\titleformat{\subsection}
+  {\large\bfseries\color{secondary}}
+  {\thesubsection.}{0.6em}{}
+
+%% ─── Boîtes d'encadré ────────────────────────────────────────────────────────
+\tcbuselibrary{skins,breakable}
+\newtcolorbox{infobox}[1][]{
+  colback=lightblue, colframe=primary,
+  fonttitle=\bfseries\small, title=#1,
+  arc=4pt, boxrule=0.8pt
+}
+\newtcolorbox{warnbox}[1][]{
+  colback=yellow!10, colframe=warning,
+  fonttitle=\bfseries\small, title=#1,
+  arc=4pt, boxrule=0.8pt
+}
+\newtcolorbox{ethicbox}[1][]{
+  colback=green!5, colframe=success,
+  fonttitle=\bfseries\small, title=#1,
+  arc=4pt, boxrule=0.8pt
+}
+
+%% ═══════════════════════════════════════════════════════════════════════════
+\begin{document}
+%% ═══════════════════════════════════════════════════════════════════════════
+
+%% ───────────────────────────────────────────────────────────────────────────
+%% PAGE DE TITRE (personnalisée)
+%% ───────────────────────────────────────────────────────────────────────────
+\begin{titlepage}
+  \begin{center}
+    \vspace*{1.5cm}
+    {\color{primary}\rule{\linewidth}{2pt}}
+    \vspace{0.6cm}
+    {\Huge\bfseries\color{primary}
+      Collecte et Préparation\\[0.3em]
+      d'un Dataset d'Images\\[0.3em]
+      pour Classification d'Oiseaux}
+    \vspace{0.4cm}
+    {\color{primary}\rule{\linewidth}{2pt}}
+    \vspace{1.2cm}
+
+    \begin{tcolorbox}[colback=lightblue, colframe=primary, arc=6pt,
+                      boxrule=1pt, width=0.85\linewidth]
+      \centering
+      {\large\bfseries Rapport complet}\\[0.4em]
+      {\normalsize Méthodologie, statistiques, limites, éthique}
+    \end{tcolorbox}
+
+    \vspace{2cm}
+    \begin{tabular}{rl}
+      \textbf{Repository :} & \href{https://github.com/souhayle98/projet_scraping2}
+                              {\color{secondary}\texttt{github.com/souhayle98/projet\_scraping2}} \\[0.4em]
+      \textbf{Branches :}   & \texttt{main} (production) \quad \texttt{dev} (développement) \\[0.4em]
+      \textbf{Date :}       & \today \\[0.4em]
+    \end{tabular}
+
+    \vfill
+    \begin{tikzpicture}[node distance=0pt]
+      \node[draw=primary, fill=lightblue, rounded corners=4pt,
+            minimum width=2.1cm, minimum height=0.75cm,
+            font=\small\bfseries, text=primary] (A) at (0,0) {Scraping};
+      \node[draw=primary, fill=lightblue, rounded corners=4pt,
+            minimum width=2.1cm, minimum height=0.75cm,
+            font=\small\bfseries, text=primary] (B) at (2.6,0) {Nettoyage};
+      \node[draw=primary, fill=lightblue, rounded corners=4pt,
+            minimum width=2.1cm, minimum height=0.75cm,
+            font=\small\bfseries, text=primary] (C) at (5.2,0) {Prétraitement};
+      \node[draw=primary, fill=lightblue, rounded corners=4pt,
+            minimum width=2.1cm, minimum height=0.75cm,
+            font=\small\bfseries, text=primary] (D) at (7.8,0) {Augmentation};
+      \node[draw=primary, fill=lightblue, rounded corners=4pt,
+            minimum width=2.1cm, minimum height=0.75cm,
+            font=\small\bfseries, text=primary] (E) at (10.4,0) {Division};
+      \draw[->, thick, color=secondary] (A.east) -- (B.west);
+      \draw[->, thick, color=secondary] (B.east) -- (C.west);
+      \draw[->, thick, color=secondary] (C.east) -- (D.west);
+      \draw[->, thick, color=secondary] (D.east) -- (E.west);
+    \end{tikzpicture}
+    \vspace{1.5cm}
+    {\small\color{darkgray}\textit{Pipeline complet — de la collecte à la préparation finale}}
+  \end{center}
+\end{titlepage}
+
+\tableofcontents
+\thispagestyle{fancy}
+\newpage
+
+%% ═══════════════════════════════════════════════════════════════════════════
+\section{Introduction et Contexte}
+%% ═══════════════════════════════════════════════════════════════════════════
+Ce rapport documente l'intégralité du pipeline de constitution d'un dataset d'images 
+d'oiseaux (5 espèces), depuis la collecte automatisée jusqu'à la préparation finale 
+pour l'apprentissage profond.
+
+\begin{infobox}[Objectif du projet]
+Constituer un dataset propre, équilibré et annoté en respectant les bonnes pratiques 
+de l'ingénierie des données et les principes éthiques de collecte.
+\end{infobox}
+
+\textbf{Technologies clés :}
+\begin{itemize}[noitemsep]
+  \item \textbf{Scraping :} Python, requests, BeautifulSoup, Selenium
+  \item \textbf{Traitement image :} Pillow, OpenCV
+  \item \textbf{Analyse :} pandas, matplotlib, scikit-learn
+  \item \textbf{Versioning :} Git / GitHub (main + dev)
+\end{itemize}
+
+%% ═══════════════════════════════════════════════════════════════════════════
+\section{Méthodologie Complète}
+%% ═══════════════════════════════════════════════════════════════════════════
+
+\subsection{Étape 1 — Collecte (Scraping)}
+Le script \texttt{scraper\_oi.py} combine :
+\begin{itemize}[noitemsep]
+  \item \textbf{Requêtes statiques} (requests + BeautifulSoup) pour les pages simples.
+  \item \textbf{Navigation dynamique} (Selenium) pour le chargement infini.
+\end{itemize}
+Un délai aléatoire (1–3 s) et une rotation d'User-Agent limitent les blocages.  
+Les logs sont stockés dans \texttt{rapports/scraping.log}.
+
+\subsection{Étape 2 — Nettoyage (\texttt{nettoyage.py})}
+\begin{enumerate}[noitemsep]
+  \item Suppression des doublons (hash MD5).
+  \item Vérification d'intégrité (Pillow).
+  \item Filtrage dimensionnel (rejet si < 64×64 px).
+  \item Conservation des formats JPEG/PNG/WebP uniquement.
+\end{enumerate}
+Les opérations sont tracées dans \texttt{rapports/nettoyage.log}.
+
+\subsection{Étape 3 — Prétraitement (\texttt{pretraitement.py})}
+Standardisation de chaque image :
+\begin{itemize}[noitemsep]
+  \item Redimensionnement à 224×224 px (taille standard pour ResNet).
+  \item Conversion RGB.
+  \item Normalisation des pixels dans [0,1].
+  \item Sauvegarde en tableau NumPy (.npy).
+\end{itemize}
+
+\subsection{Étape 4 — Augmentation (\texttt{augmentation.py})}
+Pour enrichir la variabilité et corriger le déséquilibre initial :
+\begin{itemize}[noitemsep]
+  \item Rotation aléatoire (-15° à +15°)
+  \item Symétrie horizontale (50\% proba)
+  \item Zoom aléatoire (facteur 0.9–1.1)
+  \item Luminosité / contraste ajustés (×0.8–1.2)
+\end{itemize}
+Chaque image originale génère 5 variantes.
+
+\subsection{Étape 5 — Division (\texttt{division\_dataset.py})}
+Répartition stratifiée (70\% train, 15\% val, 15\% test) avec graine aléatoire fixe (42).
+
+%% ═══════════════════════════════════════════════════════════════════════════
+\section{Difficultés Rencontrées et Solutions}
+%% ═══════════════════════════════════════════════════════════════════════════
+\begin{warnbox}[Principaux obstacles]
+\begin{enumerate}[noitemsep]
+  \item \textbf{Blocage HTTP (403/429)} → rotation d'User-Agent + délais adaptatifs.
+  \item \textbf{Contenu JavaScript} → ajout de Selenium avec WebDriverWait.
+  \item \textbf{Doublons inter-sources} → hachage MD5 global.
+  \item \textbf{Déséquilibre de classes} → sur‑augmentation ciblée.
+  \item \textbf{Images corrompues} → blocs try/except + log.
+\end{enumerate}
+\end{warnbox}
+La pagination infinie a été gérée par simulation du défilement et détection de la fin de page via hauteur DOM.
+
+%% ═══════════════════════════════════════════════════════════════════════════
+\section{Statistiques Détaillées (avec Graphiques)}
+%% ═══════════════════════════════════════════════════════════════════════════
+
+\subsection{Bilan global du pipeline}
+\begin{table}[H]
+  \centering
+  \caption{Tableau de synthèse complet}
+  \renewcommand{\arraystretch}{1.3}
+  \begin{tabular}{lc}
+    \toprule
+    \textbf{Étape} & \textbf{Nombre d'images} \\
+    \midrule
+    Collectées (scraping)              & 455 \\
+    Supprimées (nettoyage)             &  62 (13,6\%) \\
+    \quad dont filigranes              &  59 \\
+    \quad dont doublons                &   3 \\
+    Après nettoyage                    & 375 \\
+    Après prétraitement                & 375 \\
+    Après augmentation ($\times$6)     & 2 250 \\
+    \midrule
+    Train (70\%)  & 1 576 \\
+    Validation (15\%) & 335 \\
+    Test (15\%)   & 339 \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\subsection{Graphique 1 — Images collectées vs cible (100) par espèce}
+\begin{center}
+\begin{tikzpicture}
+  \begin{axis}[
+    ybar, bar width=18pt, width=13cm, height=7cm,
+    symbolic x coords={Hibou,Flamant,Martin-p.,Cygne,Pic vert},
+    xtick=data, ymin=0, ymax=115,
+    ylabel={Nombre d'images}, xlabel={Espèce},
+    nodes near coords, nodes near coords align={vertical},
+    legend style={at={(0.98,0.98)}, anchor=north east},
+    grid=major, grid style={dashed, gray!30},
+    title={\textbf{Images collectées vs cible (100)}},
+  ]
+    \addplot[fill=primary!80] coordinates {
+      (Hibou,87) (Flamant,100) (Martin-p.,100) (Cygne,68) (Pic vert,100)
+    };
+    \addplot[fill=none, draw=accent, very thick, dashed] coordinates {
+      (Hibou,100) (Flamant,100) (Martin-p.,100) (Cygne,100) (Pic vert,100)
+    };
+    \legend{Collectées, Cible}
+  \end{axis}
+\end{tikzpicture}
+\end{center}
+
+\subsection{Graphique 2 — Suppressions par motif (camembert)}
+\begin{center}
+\begin{tikzpicture}
+  \pie[
+    radius=3.5, color={accent!80, warning!80, primary!80, success!80},
+    text=pin, before number=\phantom{}, after number=\,\%
+  ]{
+    0/Corrompues,
+    4.8/Taille insuffisante,
+    95.2/Filigranes,
+    0/Doublons
+  }
+\end{tikzpicture}
+\captionof{figure}{Répartition des causes de suppression (dominées par les filigranes)}
+\end{center}
+
+\subsection{Graphique 3 — Avant / après augmentation}
+\begin{center}
+\begin{tikzpicture}
+  \begin{axis}[
+    ybar, bar width=14pt, width=13cm, height=7cm,
+    symbolic x coords={Hibou,Flamant,Martin-p.,Cygne,Pic vert},
+    xtick=data, ymin=0, ymax=620,
+    ylabel={Nombre d'images}, legend style={at={(0.98,0.98)}, anchor=north east},
+    grid=major, grid style={dashed, gray!30},
+    nodes near coords, nodes near coords align={vertical},
+    title={\textbf{Images finales vs images augmentées}},
+  ]
+    \addplot[fill=primary!80] coordinates {
+      (Hibou,67)(Flamant,84)(Martin-p.,93)(Cygne,53)(Pic vert,78)
+    };
+    \addplot[fill=success!70] coordinates {
+      (Hibou,402)(Flamant,504)(Martin-p.,558)(Cygne,318)(Pic vert,468)
+    };
+    \legend{Finales (après nettoyage), Augmentées ($\times$6)}
+  \end{axis}
+\end{tikzpicture}
+\end{center}
+
+\subsection{Graphique 4 — Répartition finale train/val/test (camembert global)}
+\begin{center}
+\begin{tikzpicture}
+  \pie[radius=3, color={primary!80, secondary!80, accent!80}, text=pin, after number=\,\%]{
+    70/Train (1 576),
+    15/Validation (335),
+    15/Test (339)
+  }
+\end{tikzpicture}
+\captionof{figure}{Proportions respectées pour l'entraînement supervisé}
+\end{center}
+
+%% ═══════════════════════════════════════════════════════════════════════════
+\section{Analyse Critique des Limites et Biais du Dataset}
+%% ═══════════════════════════════════════════════════════════════════════════
+\subsection{Biais géographique}
+Les requêtes en français orientent Bing Images vers des sites européens.  
+Le modèle risque d'être moins performant sur des oiseaux d'Afrique, d'Asie ou d'Amérique.
+
+\subsection{Biais de saillance}
+Les images les plus partagées (oiseaux colorés, poses typiques, plumage nuptial) sont surreprésentées.  
+Les individus juvéniles, en mue ou partiellement cachés sont sous-représentés.
+
+\subsection{Déséquilibre résiduel}
+Même après augmentation, le ratio entre la classe la plus fréquente (Martin-pêcheur : 558) et la moins fréquente (Cygne : 318) est de 1,75.  
+Des techniques de pondération ou de sur‑échantillonnage seront nécessaires en entraînement.
+
+\subsection{Absence d'annotation humaine}
+Les étiquettes sont déduites des noms de dossiers. Une vérification manuelle sur 5–10\% des images permettrait d'estimer le taux d'erreur.
+
+\begin{warnbox}[Recommandations]
+Ajouter un audit humain, documenter les dates de collecte, et réexaminer périodiquement la distribution.
+\end{warnbox}
+
+%% ═══════════════════════════════════════════════════════════════════════════
+\section{Réflexion Éthique sur la Collecte d'Images}
+%% ═══════════════════════════════════════════════════════════════════════════
+\begin{ethicbox}[Principes appliqués]
+Respect des \texttt{robots.txt}, délais inter‑requêtes, usage strictement académique.
+\end{ethicbox}
+
+\subsection{Droits d'auteur}
+Les images appartiennent à leurs auteurs. Le dataset n'est pas redistribué publiquement et sert uniquement dans un cadre pédagogique (fair use).
+
+\subsection{Consentement et vie privée}
+Aucune photo de personne n'a été intentionnellement collectée. Si des visages apparaissaient accidentellement, ils seraient floutés.
+
+\subsection{Biais algorithmique et justice}
+Un modèle entraîné sur ce dataset pourrait être injuste envers des sous‑espèces ou des régions peu représentées. Cela doit être documenté dans toute publication.
+
+\subsection{Transparence}
+L'intégralité du code, des logs et de la méthodologie est accessible sur GitHub pour assurer la reproductibilité.
+
+%% ═══════════════════════════════════════════════════════════════════════════
+\section{Illustrations}
+%% ═══════════════════════════════════════════════════════════════════════════
+
+
+\vspace{1em}
+
+\begin{figure}[H]
+  \centering
+  \begin{subfigure}{0.48\linewidth}
+    \centering
+    % Remplacer "screenshot1_scraping.png" par le nom réel de votre fichier
+    \includegraphics[width=\linewidth, height=5cm, keepaspectratio]{1.png}
+    \label{fig:scraping}
+  \end{subfigure}
+  \hfill
+  \begin{subfigure}{0.48\linewidth}
+    \centering
+    \includegraphics[width=\linewidth, height=5cm, keepaspectratio]{2.png}
+    \label{fig:nettoyage}
+  \end{subfigure}
+  \caption{Étapes 1 et 2 — Collecte et nettoyage}
+  \label{fig:captures1}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \begin{subfigure}{0.48\linewidth}
+    \centering
+    \includegraphics[width=\linewidth, height=5cm, keepaspectratio]{3.png}
+    \label{fig:augmentation}
+  \end{subfigure}
+  \hfill
+  \begin{subfigure}{0.48\linewidth}
+    \centering
+    \includegraphics[width=\linewidth, height=5cm, keepaspectratio]{4.png}
+    \label{fig:split}
+  \end{subfigure}
+  \caption{Étapes 4 et 5 — Augmentation et division du dataset}
+  \label{fig:captures2}
+\end{figure}
+
+\begin{infobox}[Légende des captures]
+\begin{enumerate}[noitemsep]
+  \item \textbf{Fig. 1a} : Console du script de scraping — téléchargement des images par espèce.
+  \item \textbf{Fig. 1b} : Résumé du nettoyage — images supprimées par motif (doublons, taille, filigranes).
+  \item \textbf{Fig. 2a} : Visualisation des augmentations générées pour une image source.
+  \item \textbf{Fig. 2b} : Tableau final de répartition des ensembles d'entraînement, validation et test.
+\end{enumerate}
+\end{infobox}
+
+
+%% ═══════════════════════════════════════════════════════════════════════════
+\section{Conclusion}
+%% ═══════════════════════════════════════════════════════════════════════════
+Ce projet a livré un pipeline complet, reproductible et documenté, produisant un dataset final de 2 250 images prêtes pour l'apprentissage.  
+Les limites identifiées — biais géographique, de saillance, déséquilibre résiduel — sont clairement documentées, et des pistes d'amélioration sont proposées.
+
+\begin{center}
+\begin{tcolorbox}[colback=lightblue, colframe=primary, arc=6pt,
+                  boxrule=1pt, width=0.75\linewidth]
+  \centering
+  \textbf{Rapport conforme aux livrables attendus}\\[0.3em]
+  \small Scripts commentés, README, dataset organisé, analyse éthique et statistiques graphiques.
+\end{tcolorbox}
+\end{center}
+
+\end{document}
